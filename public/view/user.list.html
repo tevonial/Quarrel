@@ -1,0 +1,5 @@
+<h4>All users:</h4>
+
+<span ng-repeat="user in users">
+    <a ui-sref="user({id:user._id})">{{user.name.first}} {{user.name.last}}</a><span ng-if="!$last">, </span>
+</span>

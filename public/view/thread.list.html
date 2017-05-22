@@ -1,0 +1,37 @@
+<style>
+    table {
+        table-layout: auto;
+        border-collapse: collapse;
+        width: 100%;
+        white-space: nowrap;
+    }
+    table td {
+        border: 1px solid #ccc;
+    }
+    table .absorbing-column {
+        width: 100%;
+    }
+</style>
+
+<div loadable-indicator class="loader"></div>
+
+<table loadable class="table panel panel-primary">
+    <thead class="panel-heading">
+        <tr>
+            <th class="absorbing-column">Thread</th>
+            <th>Replies</th>
+            <th>Updated</th>
+            <th>Author</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="thread in threads" >
+            <td><a ui-sref="thread({id: thread._id})">{{thread.title}}</a></td>
+            <td>{{thread.posts.length - 1}}</td>
+            <td>{{thread.updated | date:'medium'}}</td>
+            <td>
+                <a ui-sref="user({id: thread.author._id})">{{thread.author.name.first}} {{thread.author.name.last}}</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

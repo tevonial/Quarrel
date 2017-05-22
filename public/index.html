@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quarrel</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .navbar { border-radius:0; }
+    </style>
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.3/angular-ui-router.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="routes.js"></script>
+    <script src="service/auth.js"></script>
+    <script src="service/account.js"></script>
+
+    <script src="controller/thread.js"></script>
+    <script src="controller/user.js"></script>
+    <script src="controller/auth.js"></script>
+    <script src="controller/account.js"></script>
+
+</head>
+
+<body ng-app="quarrel">
+
+<!-- NAVIGATION -->
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" ui-sref="thread-list">Quarrel</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a ui-sref="thread-list">Threads</a></li>
+            <li><a ui-sref="user-list">Users</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right" ng-controller="nav">
+            <li ng-hide="authenticated"><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li ng-hide="authenticated"><a ui-sref="login"><span class="glyphicon glyphicon-log-in"></span> Log in</a></li>
+
+            <!--<li ng-show="authenticated"><span class="navbar-text">Welcome, {{greeting}}</span></li>-->
+            <!--<li ng-show="authenticated"><a><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>-->
+
+            <li ng-show="authenticated" class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    {{greeting}}<span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a ui-sref="settings"><span class="glyphicon glyphicon-cog"></span> Account</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+                </ul>
+            </li>
+        </ul>
+
+    </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+    <ui-view></ui-view>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<div loadable-indicator class="loader"></div>
+
+<div loadable class="panel panel-primary">
+    <div class="panel-heading"><h4><strong>User info</strong></h4></div>
+
+    <!--<div class="panel-body list-row">-->
+    <div class="list-group">
+
+        <div class="list-group-item row list-row">
+            <div class="col-sm-3 gray padded">id</div>
+            <div class="col-sm-9">{{user._id}}</div>
+        </div>
+
+        <div class="list-group-item row list-row">
+            <div class="col-sm-3 gray padded">Name</div>
+            <div class="col-sm-9">{{user.name.first}} {{user.name.last}}</div>
+        </div>
+
+        <div class="list-group-item row list-row">
+            <div class="col-sm-3 gray padded">email</div>
+            <div class="col-sm-9">{{user.email}}</div>
+        </div>
+
+    </div>
+
+</div>
+
+<div loadable class="panel panel-primary">
+    <div class="panel-heading"><h4><strong>Posts</strong></h4></div>
+
+    <div class="list-group">
+
+        <div class="list-group-item row list-row" ng-repeat="post in posts">
+
+            <div class="col-sm-3 gray padded">
+                <p class="list-group-item-text">{{post.date | date:'medium'}}</p>
+                <h4 class="list-group-item-heading">
+                    <a ui-sref="thread">[{{post.thread.title}}]</a>
+                </h4>
+
+            </div>
+            <div class="col-sm-9 padded">{{post.post}}</div>
+        </div>
+
+    </div>
+</div>
