@@ -4,7 +4,7 @@
 
 angular.module('quarrel')
 
-    .controller('login', function ($location, $scope, AuthService) {
+    .controller('login', function ($state, $scope, AuthService) {
 
         $scope.attemptLogin = function () {
 
@@ -16,6 +16,7 @@ angular.module('quarrel')
             AuthService.login(credentials)
                 .then(function () {
                     $scope.response = "Log in successful.";
+                    $state.go('thread-list');
                 }, function () {
                     $scope.response = 'Incorrect credentials.';
                 });
@@ -24,15 +25,22 @@ angular.module('quarrel')
     })
 
     .controller('nav', function ($scope, $state, AuthService) {
-        $scope.authenticated = AuthService.isLoggedIn();
 
-        if ($scope.authenticated)
-            $scope.greeting = AuthService.currentUser().name.first
-                + ' ' + AuthService.currentUser().name.last;
+        $scope.$watch(function () { return AuthService.isLoggedIn(); },
+            function (authenticated) {
+                $scope.authenticated = authenticated;
+
+                if ($scope.authenticated) {
+                    var user = AuthService.currentUser();
+
+                    $scope.greeting = user.name.first
+                        + ' ' + user.name.last;
+                }
+            }
+        );
 
         $scope.logout = function () {
             AuthService.logout();
             $state.go('login', {}, {location: 'replace'});
-            // $scope.authenticated = false;
         }
     });
