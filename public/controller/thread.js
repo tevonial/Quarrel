@@ -15,10 +15,59 @@ angular.module('quarrel')
             }, onError);
     })
 
-    .controller('thread.view', function ($http, $scope, $stateParams) {
-        $http.get('/api/thread/' + $stateParams.id).then(
-            function (response) {
-                $scope.title = response.data.title;
-                $scope.posts = response.data.posts;
-            }, onError);
+    .controller('thread', function ($state, $http, $scope, $stateParams, AuthService) {
+
+        $scope.post = '';
+
+        refresh();
+
+        function refresh() {
+            $http.get('/api/thread/' + $stateParams.id).then(
+                function (response) {
+                    $scope.title = response.data.title;
+                    $scope.posts = response.data.posts;
+                }, onError);
+        }
+
+        $scope.postReply = function () {
+
+            var reply = {
+                thread: $stateParams.id,
+                author: AuthService.currentUser()._id,
+                post: $scope.post
+            };
+
+            $http.post('/api/thread/' + $stateParams.id, reply).then(
+                function () {
+                    refresh();
+                }, function () {
+                    // Fail
+                }
+            );
+
+        };
+    })
+
+    .controller('thread.create', function ($state, $scope, $http, AuthService) {
+
+        $scope.post = $scope.title = '';
+
+        $scope.postThread = function () {
+
+            var thread = {
+                author: AuthService.currentUser()._id,
+                title: $scope.title,
+                post: $scope.post
+            };
+
+            $http.post('/api/thread', thread).then(
+                function () {
+                    $state.go('thread-list');
+                }, function () {
+                    // Fail
+                }
+            );
+
+        }
+
     });

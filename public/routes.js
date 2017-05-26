@@ -15,10 +15,21 @@ angular.module('quarrel', ['ui.router'])
                 controller: 'thread.list'
             })
 
+            .state('thread-create', {
+                url: '/thread/new',
+                templateUrl: 'view/thread.create.html',
+                controller: 'thread.create'
+            })
+
             .state('thread', {
                 url: "/thread/:id",
                 templateUrl: 'view/thread.html',
-                controller: 'thread.view'
+                controller: 'thread'
+            })
+
+            .state('thread.reply', {
+                url: '/reply',
+                templateUrl: 'view/thread.reply.html'
             })
 
             .state('user-list', {
