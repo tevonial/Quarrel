@@ -19,6 +19,7 @@ module.exports = router;
 
 function list(req, res) {
     Thread.find({})
+        .sort('-updated')
         .populate({path:'author', select:'name'})
         .exec(function (err, data) {
             if (err)    return res.status(500).send('Database error.');
