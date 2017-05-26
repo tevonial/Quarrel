@@ -24,13 +24,13 @@ angular.module('quarrel')
         }
     })
 
-    .controller('nav', function ($scope, $state, AuthService) {
+    .controller('nav', function ($rootScope, $scope, $state, AuthService) {
 
         $scope.$watch(function () { return AuthService.isLoggedIn(); },
             function (authenticated) {
-                $scope.authenticated = authenticated;
+                $rootScope.authenticated = authenticated;
 
-                if ($scope.authenticated) {
+                if ($rootScope.authenticated) {
                     var user = AuthService.currentUser();
 
                     $scope.greeting = user.name.first
