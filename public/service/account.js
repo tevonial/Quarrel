@@ -12,19 +12,15 @@
     function accountService ($http, AuthService) {
 
         var getSettings = function () {
-            return $http.get('/api/account', {
-                headers: {
-                    Authorization: 'Bearer '+ AuthService.getToken()
-                }
-            });
+            return $http.get('/api/account', AuthService.authHeader());
         };
 
         var saveSettings = function (settings) {
-            return $http.put('/api/account', {settings: settings}, {
-                headers: {
-                    Authorization: 'Bearer '+ AuthService.getToken()
-                }
-            });
+            return $http.put('/api/account', {settings: settings}, AuthService.authHeader())
+                .then(function (response) {
+                    // Save new token
+                    AuthService.saveToken(response.data.token);
+                });
         };
 
         return {

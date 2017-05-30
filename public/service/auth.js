@@ -15,6 +15,14 @@
             return $window.localStorage['mean-token'];
         };
 
+        var authHeader = function () {
+            return {
+                headers: {
+                    Authorization: 'Bearer '+ getToken()
+                }
+            }
+        };
+
         var isLoggedIn = function() {
             var token = getToken();
             var payload;
@@ -64,6 +72,7 @@
             currentUser : currentUser,
             saveToken : saveToken,
             getToken : getToken,
+            authHeader : authHeader,
             isLoggedIn : isLoggedIn,
             register : register,
             login : login,
