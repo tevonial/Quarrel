@@ -26,7 +26,6 @@ function register(req, res) {
         res.json({
             "token" : token
         });
-        res.send();
     });
 }
 

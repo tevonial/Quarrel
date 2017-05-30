@@ -6,13 +6,8 @@ var router = require('express').Router();
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var passport = require('passport');
-var jwt = require('express-jwt');
 
-// Middleware parses JWT and adds payload to req object
-var jwtParse = jwt({
-    secret: 'MY_SECRET',
-    userProperty: 'payload'
-});
+var jwtParse = require('../config/jwt');
 
 
 router.get('/', jwtParse, getSettings);
@@ -39,9 +34,12 @@ function updateSettings(req, res) {
             "message" : "UnauthorizedError: private profile"
         });
     } else {
-        User.update({_id: req.payload._id}, req.body.settings, function (err) {
+        // Update user model then respond with regenerated token
+        User.findByIdAndUpdate(req.payload._id, req.body.settings, {new: true}, function (err, user) {
             if (err)    return res.status(500).send('Database error.');
-            res.status(200).send();
+            res.status(200).json({
+                token : user.generateJwt()
+            });
         });
     }
 }
