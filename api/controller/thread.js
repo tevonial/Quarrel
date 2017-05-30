@@ -5,6 +5,7 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+var jwtParse = require('../config/jwt');
 
 var Thread = mongoose.model('Thread');
 var Post = mongoose.model('Post');
@@ -12,8 +13,8 @@ var Post = mongoose.model('Post');
 
 router.get('/',     list);
 router.get('/:id',  findById);
-router.post('/',    create);
-router.post('/:id', reply);
+router.post('/',    jwtParse, create);
+router.post('/:id', jwtParse, reply);
 module.exports = router;
 
 
