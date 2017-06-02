@@ -4,6 +4,27 @@
 
 angular.module('quarrel')
 
+    .controller('register',function ($state, $scope, AuthService) {
+
+        $scope.attemptRegister = function () {
+
+            var user = {
+                name: {
+                    first: $scope.name.first,
+                    last: $scope.name.last
+                },
+                email: $scope.email,
+                password: $scope.password
+            };
+
+            AuthService.register(user)
+                .then(function () {
+                    $state.go('account');
+                });
+        }
+
+    })
+
     .controller('login', function ($state, $scope, AuthService) {
 
         $scope.attemptLogin = function () {

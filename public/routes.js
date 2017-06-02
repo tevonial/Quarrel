@@ -44,16 +44,22 @@ angular.module('quarrel', ['ui.router'])
                 controller: 'user'
             })
 
+            .state('register', {
+                url: '/register',
+                templateUrl: 'view/register.html',
+                controller: 'register'
+            })
+
             .state('login', {
                 url: '/login',
                 templateUrl: 'view/login.html',
                 controller: 'login'
             })
 
-            .state('settings', {
-                url: '/settings',
+            .state('account', {
+                url: '/account',
                 templateUrl: 'view/account.html',
-                controller: 'settings'
+                controller: 'account'
             });
     })
 
