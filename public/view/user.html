@@ -3,7 +3,6 @@
 <div loadable class="panel panel-primary">
     <div class="panel-heading"><h4><strong>User info</strong></h4></div>
 
-    <!--<div class="panel-body list-row">-->
     <div class="list-group">
 
         <div class="list-group-item row list-row">
@@ -35,7 +34,7 @@
             <div class="col-sm-3 gray padded">
                 <p class="list-group-item-text">{{post.date | date:'medium'}}</p>
                 <h4 class="list-group-item-heading">
-                    <a ui-sref="thread">[{{post.thread.title}}]</a>
+                    <a ui-sref="thread({id: post.thread._id})">[{{post.thread.title}}]</a>
                 </h4>
 
             </div>
