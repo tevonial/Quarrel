@@ -21,13 +21,18 @@ angular.module('quarrel')
             thread: $stateParams.id
         };
 
+        var threadId;
+        $scope.me = AuthService.currentUser()._id;
+
         refresh();
 
         function refresh() {
             $http.get('/api/thread/' + $stateParams.id).then(
                 function (response) {
+                    threadId = response.data._id;
                     $scope.title = response.data.title;
                     $scope.posts = response.data.posts;
+                    $scope.isOwner = response.data.author == $scope.me;
                 }, onError);
         }
 
@@ -38,10 +43,25 @@ angular.module('quarrel')
             $http.post('/api/thread/' + $stateParams.id, $scope.reply, AuthService.authHeader()).then(
                 function () {
                     refresh();
-                }, function () {
-                    // Fail
-                }
+                    $state.go('thread');
+                }, onError
             );
+        };
+
+        $scope.deletePost = function (id) {
+            $http.delete('/api/thread/post/' + id, AuthService.authHeader()).then(
+                function () {
+                    refresh();
+                }, onError
+            )
+        };
+
+        $scope.deleteThread = function () {
+            $http.delete('/api/thread/' + threadId, AuthService.authHeader()).then(
+                function () {
+                    $state.go('thread-list');
+                }, onError
+            )
         };
     })
 
@@ -60,9 +80,7 @@ angular.module('quarrel')
             $http.post('/api/thread', thread, AuthService.authHeader()).then(
                 function () {
                     $state.go('thread-list');
-                }, function () {
-                    // Fail
-                }
+                }, onError
             );
 
         };

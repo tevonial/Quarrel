@@ -15,6 +15,8 @@ router.get('/',     list);
 router.get('/:id',  findById);
 router.post('/',    jwtParse, create);
 router.post('/:id', jwtParse, reply);
+router.delete('/:id',      jwtParse, deleteThread);
+router.delete('/post/:id', jwtParse, deletePost);
 module.exports = router;
 
 
@@ -80,6 +82,45 @@ function reply(req, res) {
             if (err)    return res.status(500).send('Database error.');
 
             res.status(200).send(data);
+        });
+    });
+}
+
+function deleteThread(req, res) {
+    Thread.findById(req.params.id, function (err, thread) {
+        if (err)    return res.status(500).send('Database error.');
+
+        if (req.payload._id != thread.author) {
+            return res.status(401).json({
+                "message" : "UnauthorizedError: Must have ownership of thread"
+            });
+        }
+
+        Post.remove({_id: {$in: thread.posts}}, function (err) {
+            if (err)    return res.status(500).send('Database error.');
+
+            thread.remove();
+            res.status(200).send();
+        });
+    });
+}
+
+function deletePost(req, res) {
+    Post.findById(req.params.id, function (err, post) {
+        if (err)    return res.status(500).send('Database error.');
+
+
+        if (req.payload._id != post.author) {
+            return res.status(401).json({
+                "message" : "UnauthorizedError: Must have ownership of post"
+            });
+        }
+
+        Thread.findByIdAndUpdate(post.thread, {$pull: {posts: req.params.id}}, function (err) {
+            if (err)    return res.status(500).send('Database error.');
+
+            post.remove();
+            res.status(200).send();
         });
     });
 }
