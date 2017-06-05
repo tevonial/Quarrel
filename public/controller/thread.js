@@ -48,8 +48,10 @@ angular.module('quarrel')
             );
         };
 
-        $scope.deletePost = function (id) {
-            $http.delete('/api/thread/post/' + id, AuthService.authHeader()).then(
+        $scope.deletePost = function () {
+            if (!$scope.deletePostId)   return;
+
+            $http.delete('/api/thread/post/' + $scope.deletePostId, AuthService.authHeader()).then(
                 function () {
                     refresh();
                 }, onError
@@ -63,6 +65,10 @@ angular.module('quarrel')
                 }, onError
             )
         };
+
+        $('#confirm-delete-post').on('show.bs.modal', function(e) {
+            $scope.deletePostId = $(e.relatedTarget).data('id');
+        });
     })
 
     .controller('thread.create', function ($state, $scope, $http, AuthService) {

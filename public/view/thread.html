@@ -5,9 +5,9 @@
     <div class="panel-heading">
         <h4>
             <strong>{{title}}</strong>
-            <button class="btn btn-link pull-right" style="padding: 0" data-toggle="modal" data-target="#confirm-delete" ng-show="isOwner">
+            <a class="btn btn-link pull-right" style="padding: 0" data-toggle="modal" data-target="#confirm-delete-thread" ng-show="isOwner">
                 <span class="glyphicon glyphicon-remove text-danger"></span>
-            </button>
+            </a>
         </h4>
     </div>
 
@@ -17,9 +17,9 @@
             <div class="col-md-3 gray">
                 <p class="list-group-item-text">
                     {{post.date | date:'medium'}}
-                    <button class="btn btn-link pull-right" style="padding: 0" ng-click="deletePost(post._id)" ng-show="post.author._id == me">
+                    <a class="btn btn-link pull-right" style="padding: 0" data-id="{{post._id}}" data-target="#confirm-delete-post" data-toggle="modal" ng-show="post.author._id == me">
                         <span class="glyphicon glyphicon-remove text-danger"></span>
-                    </button>
+                    </a>
                 </p>
 
                 <h4 class="list-group-item-heading">
@@ -45,14 +45,13 @@
 </div>
 
 
-
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirm-delete-thread" tabindex="-1" role="dialog" aria-labelledby="delete-thread-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+                <h4 class="modal-title" id="delete-thread-label">Confirm Delete</h4>
             </div>
 
             <div class="modal-body">
@@ -67,4 +66,24 @@
     </div>
 </div>
 
+<div class="modal fade" id="confirm-delete-post" tabindex="-1" role="dialog" aria-labelledby="delete-post-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="delete-post-label">Confirm Delete</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>Do you <i>really</i> want to delete this post?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="deletePost()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
