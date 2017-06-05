@@ -4,9 +4,9 @@
 
 (function() {
 
-    angular
-        .module('quarrel')
-        .controller('account', function($scope, AccountService, AuthService) {
+    angular.module('quarrel')
+
+        .controller('account', function($state, $http, $scope, AccountService, AuthService) {
 
             function parseJwt (token) {
                 var base64Url = token.split('.')[1];
@@ -33,6 +33,17 @@
 
             $scope.saveSettings = function () {
                 AccountService.saveSettings($scope.settings);
+            };
+
+            $scope.deleteAccount = function () {
+                $http.delete('/api/account', AuthService.authHeader()).then(
+                    function () {
+                        AuthService.logout();
+                        $state.go('thread-list');
+                    }, function () {
+                        // FAIL
+                    }
+                );
             };
 
         });

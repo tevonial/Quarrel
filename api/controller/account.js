@@ -12,6 +12,7 @@ var jwtParse = require('../config/jwt');
 
 router.get('/', jwtParse, getSettings);
 router.put('/', jwtParse, updateSettings);
+router.delete('/', jwtParse, deleteAccount);
 module.exports = router;
 
 
@@ -40,6 +41,19 @@ function updateSettings(req, res) {
             res.status(200).json({
                 token : user.generateJwt()
             });
+        });
+    }
+}
+
+function deleteAccount(req, res) {
+    if (!req.payload._id) {
+        res.status(401).json({
+            "message" : "UnauthorizedError: private profile"
+        });
+    } else {
+        User.findByIdAndRemove(req.payload._id, function (err) {
+            if (err)    return res.status(500).send('Database error.');
+            res.status(200).send();
         });
     }
 }
