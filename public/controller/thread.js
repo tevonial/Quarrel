@@ -55,7 +55,7 @@ angular.module('quarrel')
                 function () {
                     refresh();
                 }, onError
-            )
+            );
         };
 
         $scope.deleteThread = function () {
@@ -63,11 +63,42 @@ angular.module('quarrel')
                 function () {
                     $state.go('thread-list');
                 }, onError
-            )
+            );
+        };
+
+        $scope.renameThread = function () {
+            $http.put('/api/thread/' + threadId, {title: $scope.renameThreadTitle}, AuthService.authHeader()).then(
+                function () {
+                    $scope.title = $scope.renameThreadTitle;
+                }, onError
+            );
+        };
+
+        $scope.editPost = function () {
+            $http.put('/api/thread/post/' + $scope.editPostId, {post: $scope.editedPost}, AuthService.authHeader()).then(
+                function () {
+                    $scope.posts.find(function (item) {
+                        return item._id == $scope.editPostId;
+                    }).post = $scope.editedPost;
+                }, onError
+            );
         };
 
         $('#confirm-delete-post').on('show.bs.modal', function(e) {
             $scope.deletePostId = $(e.relatedTarget).data('id');
+        });
+
+        $('#edit-post').on('show.bs.modal', function(e) {
+            $scope.editPostId = $(e.relatedTarget).data('id');
+            $scope.editedPost = $scope.posts.find(function (item) {
+                return item._id == $scope.editPostId;
+            }).post;
+
+            document.getElementById('editedPost').textContent = $scope.editedPost;
+        });
+
+        $('#rename-thread').on('show.bs.modal', function(e) {
+            document.getElementById('renameThreadTitle').value = $scope.title;
         });
     })
 
