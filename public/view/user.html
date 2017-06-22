@@ -20,6 +20,25 @@
             <div class="col-sm-9">{{user.email}}</div>
         </div>
 
+        <div class="list-group-item row list-row">
+            <div class="col-sm-3 gray padded">Role</div>
+            <div class="col-sm-9">
+                <span ng-hide="showMod">{{user.role}}</span>
+
+                <div ng-show="showMod">
+                    <form class="form-inline">
+                        <select id="selectRole" class="form-control" ng-model="modRole">
+                            <option value="reg">Regular User</option>
+                            <option value="mod">Moderator</option>
+                            <option value="admin">Admin</option>
+                        </select>
+
+                        <button class="btn btn-default" ng-click="modifyUser()">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>

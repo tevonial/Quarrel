@@ -3,16 +3,19 @@
  */
 
 var onError = function (msg) {
-    alert(msg.data);
+    alert(msg.data.message);
 };
 
 angular.module('quarrel')
 
-    .controller('user', function ($http, $scope, $stateParams) {
+    .controller('user', function ($http, $scope, $stateParams, AuthService) {
+
+        $scope.showMod = (AuthService.currentUser().role !== "reg");
 
         $http.get('/api/user/' + $stateParams.id, {timeout: 5000}).then(
             function (response) {
                 $scope.user = response.data;
+                document.getElementById('selectRole').value = $scope.user.role;
             }, onError);
 
         $http.get('/api/user/' + $stateParams.id + '/post', {timeout: 5000}).then(
@@ -20,6 +23,12 @@ angular.module('quarrel')
                 $scope.posts = response.data;
             }, onError);
 
+        $scope.modifyUser = function () {
+            $http.put('/api/user/' + $stateParams.id, {role: $scope.modRole}, AuthService.authHeader()).then(
+                function (response) {
+                    $scope.user = response.data;
+                }, onError);
+        };
 
     })
 
