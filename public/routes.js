@@ -60,6 +60,12 @@ angular.module('quarrel', ['ui.router'])
                 url: '/account',
                 templateUrl: 'view/account.html',
                 controller: 'account'
+            })
+
+            .state('control', {
+                url: '/control',
+                templateUrl: 'view/control.html',
+                controller: 'control'
             });
     })
 
