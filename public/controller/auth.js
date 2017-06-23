@@ -54,8 +54,8 @@ angular.module('quarrel')
                 if ($rootScope.authenticated) {
                     var user = AuthService.currentUser();
 
-                    $scope.greeting = user.name.first
-                        + ' ' + user.name.last;
+                    $scope.greeting = user.name.first + ' ' + user.name.last;
+                    $scope.admin = user.role === "admin";
                 }
             }
         );
