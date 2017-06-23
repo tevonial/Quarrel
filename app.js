@@ -11,13 +11,6 @@ var app = express();
 
 // mongoose.connect('mongodb://admin:pass@ds137141.mlab.com:37141/tevonial-mean');
 
-require('./api/model');
-require('./api/config/passport');
-
-
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -27,12 +20,35 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+// Initialize backend services/resources
+require('./api/model');
+require('./api/config/passport');
 app.use(passport.initialize());
 // app.use(passport.session());
 
 
+// Routes for API
 app.use('/api', require('./api/routes'));
 require('./api/config/passport');
+
+
+// Route for serving main angular app
+app.set('views', path.join(__dirname, 'public/view'));
+app.set('view engine', 'ejs');
+app.get('/', function (req, res) {
+
+    var Control = mongoose.model('Control');
+
+    Control.findOne({config: "name"}).exec(function (err, data) {
+
+        if (data === null)
+            var name = "Default";
+        else
+            var name = data.get('value');
+
+        res.render('index', {name: name});
+    });
+});
 
 
 //================================================================================
