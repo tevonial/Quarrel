@@ -9,8 +9,6 @@ var passport = require('passport');
 
 var app = express();
 
-// mongoose.connect('mongodb://admin:pass@ds137141.mlab.com:37141/tevonial-mean');
-
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -39,7 +37,7 @@ app.get('/', function (req, res) {
 
     var Control = mongoose.model('Control');
 
-    Control.findOne({config: "name"}).exec(function (err, data) {
+    Control.findOne({name: "name"}).exec(function (err, data) {
 
         if (data === null)
             var name = "Default";

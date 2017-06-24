@@ -2,9 +2,6 @@
  * Created by tevonial on 5/17/2017.
  */
 
-var onError = function (msg) {
-    alert(msg.data);
-};
 
 angular.module('quarrel')
 
@@ -12,7 +9,7 @@ angular.module('quarrel')
         $http.get('/api/thread', {timeout: 5000}).then(
             function (response) {
                 $scope.threads = response.data;
-            }, onError);
+            }, showError);
     })
 
     .controller('thread', function ($state, $http, $scope, $stateParams, AuthService) {
@@ -23,6 +20,7 @@ angular.module('quarrel')
 
         var threadId;
         $scope.me = AuthService.currentUser()._id;
+        if (!$scope.me) $scope.me = ' ';
 
         refresh();
 
@@ -32,8 +30,8 @@ angular.module('quarrel')
                     threadId = response.data._id;
                     $scope.title = response.data.title;
                     $scope.posts = response.data.posts;
-                    $scope.isOwner = response.data.author == $scope.me;
-                }, onError);
+                    $scope.isOwner = response.data.author === $scope.me;
+                }, showError);
         }
 
         $scope.postReply = function () {
@@ -44,7 +42,7 @@ angular.module('quarrel')
                 function () {
                     refresh();
                     $state.go('thread');
-                }, onError
+                }, showError
             );
         };
 
@@ -54,7 +52,7 @@ angular.module('quarrel')
             $http.delete('/api/thread/post/' + $scope.deletePostId, AuthService.authHeader()).then(
                 function () {
                     refresh();
-                }, onError
+                }, showError
             );
         };
 
@@ -62,7 +60,7 @@ angular.module('quarrel')
             $http.delete('/api/thread/' + threadId, AuthService.authHeader()).then(
                 function () {
                     $state.go('thread-list');
-                }, onError
+                }, showError
             );
         };
 
@@ -70,7 +68,7 @@ angular.module('quarrel')
             $http.put('/api/thread/' + threadId, {title: $scope.renameThreadTitle}, AuthService.authHeader()).then(
                 function () {
                     $scope.title = $scope.renameThreadTitle;
-                }, onError
+                }, showError
             );
         };
 
@@ -78,9 +76,9 @@ angular.module('quarrel')
             $http.put('/api/thread/post/' + $scope.editPostId, {post: $scope.editedPost}, AuthService.authHeader()).then(
                 function () {
                     $scope.posts.find(function (item) {
-                        return item._id == $scope.editPostId;
+                        return item._id === $scope.editPostId;
                     }).post = $scope.editedPost;
-                }, onError
+                }, showError
             );
         };
 
@@ -91,7 +89,7 @@ angular.module('quarrel')
         $('#edit-post').on('show.bs.modal', function(e) {
             $scope.editPostId = $(e.relatedTarget).data('id');
             $scope.editedPost = $scope.posts.find(function (item) {
-                return item._id == $scope.editPostId;
+                return item._id === $scope.editPostId;
             }).post;
 
             document.getElementById('editedPost').textContent = $scope.editedPost;
@@ -117,7 +115,7 @@ angular.module('quarrel')
             $http.post('/api/thread', thread, AuthService.authHeader()).then(
                 function () {
                     $state.go('thread-list');
-                }, onError
+                }, showError
             );
 
         };

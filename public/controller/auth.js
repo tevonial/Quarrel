@@ -39,7 +39,7 @@ angular.module('quarrel')
                     $scope.response = "Log in successful.";
                     $state.go('thread-list');
                 }, function () {
-                    $scope.response = 'Incorrect credentials.';
+                    showError({'data':{'message':'Incorrect credentials.  Try again.'}});
                 });
 
         }
