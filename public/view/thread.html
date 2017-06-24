@@ -46,28 +46,26 @@
         <li class="list-group-item row list-row" ng-repeat="post in posts">
 
             <div class="col-md-3 gray">
-                <!--<p class="list-group-item-text">-->
-                    {{post.date | date:'medium'}}
-                <!--</p>-->
+                {{post.date | date:'medium'}}
 
-                    <div class="dropdown pull-right h4" style="display: inline; padding: 0; margin: 0" ng-show="post.author._id == me">
+                <div class="dropdown pull-right h4" style="display: inline; padding: 0; margin: 0" ng-show="post.author._id == me">
 
-                        <a class="dropdown-toggle" style="padding: 0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <span class="glyphicon glyphicon-cog"></span>
-                        </a>
+                    <a class="dropdown-toggle" style="padding: 0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span class="glyphicon glyphicon-cog"></span>
+                    </a>
 
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href data-toggle="modal" data-id="{{post._id}}" data-target="#edit-post">Edit</a>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li>
-                                <a href class="text-danger" data-toggle="modal" data-id="{{post._id}}" data-target="#confirm-delete-post">
-                                    <strong class="text-danger">Delete</strong>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href data-toggle="modal" data-id="{{post._id}}" data-target="#edit-post">Edit</a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li>
+                            <a href class="text-danger" data-toggle="modal" data-id="{{post._id}}" data-target="#confirm-delete-post">
+                                <strong class="text-danger">Delete</strong>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
                 <h4 class="list-group-item-heading">
                     <a ng-show="post.author._id" ui-sref="user({id: post.author._id})" >{{post.author.name.first}} {{post.author.name.last}}</a>
@@ -91,6 +89,8 @@
 
 </div>
 
+
+<!--Dialogs-->
 
 <div class="modal fade" id="confirm-delete-thread" tabindex="-1" role="dialog" aria-labelledby="delete-thread-label" aria-hidden="true">
     <div class="modal-dialog">
@@ -144,19 +144,19 @@
             </div>
 
             <div class="modal-body">
-                <input id="renameThreadTitle" autofocus type="text" class="form-control" ng-model="renameThreadTitle" />
+                <input id="renameThreadTitle" autofocus type="text" class="form-control" ng-model="renameThreadTitle" placeholder="Thread title" />
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="renameThread()">Save</button>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" ng-click="renameThread()">Save</button>
             </div>
         </div>
     </div>
 </div>
 
 <div class="modal fade" id="edit-post" tabindex="-1" role="dialog" aria-labelledby="edit-post-label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -165,7 +165,7 @@
             </div>
 
             <div class="modal-body">
-                <textarea autofocus id="editedPost" style="resize: vertical" autofocus class="form-control" ng-model="editedPost"></textarea>
+                <textarea autofocus id="editedPost" style="resize: vertical" autofocus class="form-control" ng-model="editedPost" placeholder="Content of post"></textarea>
             </div>
 
             <div class="modal-footer">
