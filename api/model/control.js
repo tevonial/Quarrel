@@ -6,7 +6,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var controlSchema = new Schema({
-    name: String
+    name: String,
+    value: String
 });
 controlSchema.set('collection', 'control');
 
