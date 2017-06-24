@@ -103,4 +103,33 @@ angular.module('quarrel', ['ui.router'])
                 });
             }
         };
-    }]);
+    }])
+
+    .config(function ($httpProvider, $provide) {
+        $provide.factory('httpInterceptor', function ($q, $rootScope) {
+            return {
+                'request': function (config) {
+                    // broadcasting 'httpRequest' event
+                    // $rootScope.$broadcast('httpRequest', config);
+                    dismissError(true);
+                    // $('#errorAlert').hide();
+                    // $('.error-hide').show();
+                    return config;// || $q.when(config);
+                }
+            };
+        });
+        $httpProvider.interceptors.push('httpInterceptor');
+    });
+
+function showError(msg) {
+    $('#errorMsg').html(msg.data.message);
+    $('#errorAlert').show();
+    $('.error-hide').hide();
+}
+
+function dismissError(showHiddenContent) {
+    $('#errorAlert').hide();
+
+    if (showHiddenContent)
+        $('.error-hide').show();
+}

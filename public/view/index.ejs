@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Quarrel</title>
+    <title><%= name%></title>
 
     <!--<base href="/">-->
 
@@ -50,14 +50,13 @@
             <li ng-hide="authenticated"><a ui-sref="register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
             <li ng-hide="authenticated"><a ui-sref="login"><span class="glyphicon glyphicon-log-in"></span> Log in</a></li>
 
-
+            <li><a ui-sref="control" ng-show="authenticated && admin">Control Panel</a></li>
             <li ng-show="authenticated" class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     {{greeting}}<span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
                     <li><a ui-sref="account"><span class="glyphicon glyphicon-cog"></span> Account</a></li>
-                    <li><a ui-sref="control" ng-show="admin">Control Panel</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
                 </ul>
@@ -68,9 +67,17 @@
 </nav>
 
 <!-- MAIN CONTENT -->
+
 <div class="container">
+    <div id="errorAlert" class="alert alert-danger" role="alert">
+        <button type="button" class="close" onclick="dismissError(false)" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <span id="errorMsg"></span>
+    </div>
+
     <ui-view></ui-view>
 </div>
+
+
 
 
 </body>
