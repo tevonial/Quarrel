@@ -11,7 +11,7 @@ var userSchema = new Schema({
         first: String,
         last: String
     },
-    role: String,
+    role: {type: String, default: 'reg'},
     password: String
     // hash: Number,
     // salt: Number

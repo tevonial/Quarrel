@@ -49,7 +49,7 @@ function modifyRole(req, res) {
             "message" : "UnauthorizedError: User Permission" + req.payload.role
         });
     } else {
-        User.findByIdAndUpdate(req.params.id, {role: req.body.role}, function (err, user) {
+        User.findByIdAndUpdate(req.params.id, {role: req.body.role}, {new: true}, function (err, user) {
             if (err)    return res.status(500).send('Database error.');
             res.status(200).send(user);
         })
