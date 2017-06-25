@@ -12,9 +12,8 @@ var userSchema = new Schema({
         last: String
     },
     role: {type: String, default: 'reg'},
-    password: String
-    // hash: Number,
-    // salt: Number
+    hash: String,
+    salt: String
 });
 
 
@@ -25,16 +24,18 @@ var userSchema = new Schema({
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 
+function md5(string) {
+    return crypto.createHash('md5').update(string).digest('hex');
+}
+
 userSchema.methods.setPassword = function(password){
-    // this.salt = crypto.randomBytes(16).toString('hex');
-    // this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
-    this.password = password;
+    this.salt = crypto.randomBytes(16).toString('hex');
+
+    this.hash = md5(password + this.salt);
 };
 
 userSchema.methods.validPassword = function(password) {
-    // var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
-    // return this.hash === hash;
-    return this.password === password;
+    return this.hash === md5(password + this.salt);
 };
 
 userSchema.methods.generateJwt = function() {

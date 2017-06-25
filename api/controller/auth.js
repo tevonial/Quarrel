@@ -7,6 +7,8 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var passport = require('passport');
 
+var sendError = require('../config/error');
+
 router.post('/register', register);
 router.post('/login',    login);
 module.exports = router;
@@ -20,11 +22,9 @@ function register(req, res) {
     user.setPassword(req.body.password);
 
     user.save(function(err) {
-        var token;
-        token = user.generateJwt();
-        res.status(200);
-        res.json({
-            "token" : token
+        if (err) return sendError(res, 500, err);
+        res.status(200).json({
+            "token" : user.generateJwt()
         });
     });
 }
@@ -32,7 +32,6 @@ function register(req, res) {
 function login(req, res) {
 
     passport.authenticate('local', function(err, user, info){
-        var token;
 
         // If Passport throws/catches an error
         if (err) {
@@ -42,10 +41,8 @@ function login(req, res) {
 
         // If a user is found
         if(user){
-            token = user.generateJwt();
-            res.status(200);
-            res.json({
-                "token" : token
+            res.status(200).json({
+                "token" : user.generateJwt()
             });
         } else {
             // If user is not found
