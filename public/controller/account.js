@@ -28,7 +28,7 @@
                     $scope.settings.email = response.data.email;
                     $scope.settings.name = response.data.name;
                 }, function (response) {
-                    $scope.info.response = response.data;
+                    showError(response);
                 });
 
             $scope.saveSettings = function () {

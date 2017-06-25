@@ -6,6 +6,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var jwtParse = require('../config/jwt');
+var sendError = require('../config/error');
 
 var Thread = mongoose.model('Thread');
 var Post = mongoose.model('Post');
@@ -31,7 +32,7 @@ function list(req, res) {
         .sort('-updated')
         .populate({path:'author', select:'name'})
         .exec(function (err, data) {
-            if (err)    return res.status(500).send('Database error.');
+            if (err)    return sendError(res, 500, 'Database error.');
             res.status(200).send(data);
         });
 }
@@ -45,32 +46,32 @@ function findById(req, res) {
                 select: 'name'
             }
         }).exec(function (err, data) {
-            if (err)    return res.status(500).send('Database error.');
+            if (err)    return sendError(res, 500, 'Database error.');
             res.status(200).send(data);
         });
 }
 
 function create(req, res) {
-    if (isBlank(req.body.post))    return res.status(500).send('Invalid post.');
+    if (isBlank(req.body.post))    return sendError(res, 400, 'Invalid post.');
 
     var thread = new Thread();
     thread.title = req.body.title;
-    thread.author = req.body.author;
+    thread.author = req.payload._id;
 
     var originalPost = new Post();
-    originalPost.author = req.body.author;
+    originalPost.author = req.payload._id;
     originalPost.post = req.body.post;
 
     thread.save(function (err, data) {
         originalPost.thread = data._id;
 
         originalPost.save(function (err, data) {
-            if (err)    return res.status(500).send('Database error.');
+            if (err)    return sendError(res, 500, 'Database error.');
 
             thread.posts.push(data._id);
 
             thread.save(function (err) {
-                if (err)    return res.status(500).send('Database error.');
+                if (err)    return sendError(res, 500, 'Database error.');
                 res.status(200).send(data);
             });
         });
@@ -78,10 +79,13 @@ function create(req, res) {
 }
 
 function reply(req, res) {
-    if (isBlank(req.body.post))    return res.status(500).send('Invalid post.');
+    if (isBlank(req.body.post) || req.params.id !== req.body.thread)
+        return sendError(res, 400, 'Invalid post.');
+
+    req.body.author = req.payload._id;
 
     Post.create(req.body, function (err, data) {
-        if (err)    return res.status(500).send('Database error.');
+        if (err)    return sendError(res, 500, 'Database error.');
 
         var update = {
             $push: {posts: data},
@@ -89,7 +93,7 @@ function reply(req, res) {
         };
 
         Thread.update({_id: data.thread}, update, function (err) {
-            if (err)    return res.status(500).send('Database error.');
+            if (err)    return sendError(res, 500, 'Database error.');
 
             res.status(200).send(data);
         });
@@ -98,12 +102,10 @@ function reply(req, res) {
 
 function deleteThread(req, res) {
     Thread.findById(req.params.id, function (err, thread) {
-        if (err)    return res.status(500).send('Database error.');
+        if (err)    return sendError(res, 500, 'Database error.');
 
         if (req.payload._id != thread.author) {
-            return res.status(401).json({
-                "message" : "UnauthorizedError: Must have ownership of thread"
-            });
+            return sendError(res, 401, "UnauthorizedError: Must have ownership of thread");
         }
 
         Post.remove({_id: {$in: thread.posts}}, function (err) {
@@ -116,15 +118,13 @@ function deleteThread(req, res) {
 }
 
 function renameThread(req, res) {
-    if (isBlank(req.body.title))    return res.status(500).send('Invalid title.');
+    if (isBlank(req.body.title))    return sendError(res, 400, 'Invalid title.');
 
     Thread.findById(req.params.id, function (err, thread) {
-        if (err)    return res.status(500).send('Database error.');
+        if (err)    return sendError(res, 500, 'Database error.');
 
         if (req.payload._id != thread.author) {
-            return res.status(401).json({
-                "message" : "UnauthorizedError: Must have ownership of thread"
-            });
+            return sendError(res, 401, "UnauthorizedError: Must have ownership of thread");
         }
 
         thread.title = req.body.title;
@@ -136,16 +136,14 @@ function renameThread(req, res) {
 
 function deletePost(req, res) {
     Post.findById(req.params.id, function (err, post) {
-        if (err)    return res.status(500).send('Database error.');
+        if (err)    return sendError(res, 500, 'Database error.');
 
         if (req.payload._id != post.author) {
-            return res.status(401).json({
-                "message" : "UnauthorizedError: Must have ownership of post"
-            });
+            return sendError(res, 401, "UnauthorizedError: Must have ownership of post");
         }
 
         Thread.findByIdAndUpdate(post.thread, {$pull: {posts: req.params.id}}, function (err) {
-            if (err)    return res.status(500).send('Database error.');
+            if (err)    return sendError(res, 500, 'Database error.');
 
             post.remove();
             res.status(200).send();
@@ -154,15 +152,13 @@ function deletePost(req, res) {
 }
 
 function editPost(req, res) {
-    if (isBlank(req.body.post))    return res.status(500).send('Invalid post.');
+    if (isBlank(req.body.post))    return sendError(res, 500, 'Database error.');
 
     Post.findById(req.params.id, function (err, post) {
-        if (err)    return res.status(500).send('Database error.');
+        if (err)    return sendError(res, 500, 'Database error.');
 
         if (req.payload._id != post.author) {
-            return res.status(401).json({
-                "message" : "UnauthorizedError: Must have ownership of post"
-            });
+            return sendError(res, 401, "UnauthorizedError: Must have ownership of post");
         }
 
         post.post = req.body.post;
