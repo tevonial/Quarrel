@@ -36,8 +36,6 @@ angular.module('quarrel')
 
         $scope.postReply = function () {
 
-            $scope.reply.author = AuthService.currentUser()._id;
-
             $http.post('/api/thread/' + $stateParams.id, $scope.reply, AuthService.authHeader()).then(
                 function () {
                     refresh();
@@ -76,7 +74,7 @@ angular.module('quarrel')
             $http.put('/api/thread/post/' + $scope.editPostId, {post: $scope.editedPost}, AuthService.authHeader()).then(
                 function () {
                     $scope.posts.find(function (item) {
-                        return item._id === $scope.editPostId;
+                        return item._id == $scope.editPostId;
                     }).post = $scope.editedPost;
                 }, showError
             );
@@ -89,7 +87,7 @@ angular.module('quarrel')
         $('#edit-post').on('show.bs.modal', function(e) {
             $scope.editPostId = $(e.relatedTarget).data('id');
             $scope.editedPost = $scope.posts.find(function (item) {
-                return item._id === $scope.editPostId;
+                return item._id == $scope.editPostId;
             }).post;
 
             document.getElementById('editedPost').textContent = $scope.editedPost;
@@ -107,7 +105,6 @@ angular.module('quarrel')
         $scope.postThread = function () {
 
             var thread = {
-                author: AuthService.currentUser()._id,
                 title: $scope.title,
                 post: $scope.post
             };
