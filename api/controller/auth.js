@@ -18,19 +18,29 @@ function register(req, res) {
 
     user.name = req.body.name;
     user.email = req.body.email;
+    user.setPassword(req.body.password);
 
     // For setup only
     if (req.body.role) {
         User.find({}, function (err, users) {
-            if (users.length === 0)
+            if (err) return sendError(res, 500, err.message);
+            if (users.length === 0) {
                 user.role = req.body.role;
+            }
+
+            saveUser(res, user);
         });
+
+    // For all other registrations
+    } else {
+        saveUser(res, user);
     }
+}
 
-    user.setPassword(req.body.password);
 
+function saveUser(res, user) {
     user.save(function(err) {
-        if (err) return sendError(res, 500, err);
+        if (err) return sendError(res, 500, err.message);
         res.status(200).json({
             "token" : user.generateJwt()
         });

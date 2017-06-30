@@ -6,10 +6,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
-    email: String,
+    email: {type: String, unique: true},
     name: {
-        first: String,
-        last: String
+        first: {type: String, required: true},
+        last: {type: String, required: true}
     },
     role: {type: String, default: 'reg'},
     hash: String,
@@ -30,7 +30,6 @@ function md5(string) {
 
 userSchema.methods.setPassword = function(password){
     this.salt = crypto.randomBytes(16).toString('hex');
-
     this.hash = md5(password + this.salt);
 };
 
