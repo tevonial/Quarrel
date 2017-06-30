@@ -19,6 +19,14 @@ function register(req, res) {
     user.name = req.body.name;
     user.email = req.body.email;
 
+    // For setup only
+    if (req.body.role) {
+        User.find({}, function (err, users) {
+            if (users.length === 0)
+                user.role = req.body.role;
+        });
+    }
+
     user.setPassword(req.body.password);
 
     user.save(function(err) {

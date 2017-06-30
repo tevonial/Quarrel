@@ -40,7 +40,7 @@ function updateConfig(req, res) {
     } else {
 
         req.body.forEach(function (x) {
-            Control.update({name: x.name}, {$set: {value: x.value}}, function (err, data) {
+            Control.update({name: x.name}, {$set: {value: x.value}}, {upsert: true}, function (err, data) {
 
             });
         });

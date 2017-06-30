@@ -40,12 +40,16 @@ app.get('/', function (req, res) {
     Control.findOne({name: "name"}).exec(function (err, data) {
 
         if (data === null)
-            var name = "Default";
+            res.redirect('/setup');
         else
             var name = data.get('value');
 
         res.render('index', {name: name});
     });
+});
+
+app.get('/setup', function (req, res) {
+    res.sendFile(path.join(__dirname, 'public/view', 'setup.html'));
 });
 
 
@@ -69,6 +73,8 @@ app.use(function (err, req, res, next) {
         res.status(500);
 
     res.json({"message" : err.name + ": " + err.message});
+
+    next();
 });
 
 module.exports = app;
