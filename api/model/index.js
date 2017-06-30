@@ -18,3 +18,4 @@ mongoose.connect(db);
 require('./user');
 require('./post');
 require('./thread');
+require('./control');

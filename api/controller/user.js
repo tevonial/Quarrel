@@ -12,7 +12,7 @@ var jwtParse = require('../config/jwt');
 router.get('/',         list);
 router.get('/:id',      findById);
 router.get('/:id/post', findPosts);
-router.put('/:id', jwtParse, modifyRole)
+router.put('/:id', jwtParse, modifyRole);
 module.exports = router;
 
 
