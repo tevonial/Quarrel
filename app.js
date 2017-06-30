@@ -33,7 +33,12 @@ require('./api/config/passport');
 // Route for serving main angular app
 app.set('views', path.join(__dirname, 'public/view'));
 app.set('view engine', 'ejs');
-app.get('/', function (req, res) {
+
+app.get('/setup', function (req, res) {
+    res.sendFile(path.join(__dirname, 'public/view', 'setup.html'));
+});
+
+app.get('*', function (req, res) {
 
     var Control = mongoose.model('Control');
 
@@ -48,11 +53,6 @@ app.get('/', function (req, res) {
     });
 });
 
-app.get('/setup', function (req, res) {
-    res.sendFile(path.join(__dirname, 'public/view', 'setup.html'));
-});
-
-
 //================================================================================
 // HTTP Error handling
 //================================================================================
@@ -65,12 +65,13 @@ app.use(function(req, res, next) {
 // Error handler
 app.use(function (err, req, res, next) {
     // HTTP 401 Unauthorized
-    if (err.name === 'UnauthorizedError')
+    if (err.name === 'UnauthorizedError') {
         res.status(401);
 
-    // Other errors
-    else
+        // Other errors
+    } else {
         res.status(500);
+    }
 
     res.json({"message" : err.name + ": " + err.message});
 

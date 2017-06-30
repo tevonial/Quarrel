@@ -4,7 +4,13 @@
 
 angular.module('quarrel', ['ui.router'])
 
-    .config(function($stateProvider, $urlRouterProvider) {
+    .config(function($stateProvider, $urlRouterProvider, $locationProvider) {
+
+        $locationProvider.html5Mode({
+            enabled: true,
+            requireBase: false,
+            rewriteLinks: false
+        });
 
         $urlRouterProvider.otherwise('/thread');
 
@@ -66,6 +72,10 @@ angular.module('quarrel', ['ui.router'])
                 url: '/control',
                 templateUrl: 'view/control.html',
                 controller: 'control'
+            })
+
+            .state('setup', {
+                url: '/setup'
             });
     })
 
