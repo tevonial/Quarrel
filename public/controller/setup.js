@@ -2,10 +2,6 @@
  * Created by tevonial on 6/29/2017.
  */
 
-function showError(msg) {
-    alert(msg.data.message);
-}
-
 angular.module('quarrel')
 
     .controller('setup', function ($scope, $http, $window, AuthService) {
@@ -34,11 +30,10 @@ angular.module('quarrel')
 
                     $http.put('/api/control', request, AuthService.authHeader()).then(
                         function (response) {
+                            $window.location.href = '/';
+                        }, showError);
 
-                        });
-
-                    $window.location.path('/');
-                });
+                }, showError);
         };
 
     });
