@@ -3,10 +3,11 @@
  */
 
 var jwt = require('express-jwt');
+var secret = require('./secret');
 
 
 // Middleware parses JWT and adds payload to req object
 module.exports = jwt({
-    secret: 'MY_SECRET',
+    secret: secret,
     userProperty: 'payload'
 });

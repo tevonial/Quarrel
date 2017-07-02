@@ -23,6 +23,7 @@ var userSchema = new Schema({
 
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
+var secret = require('../config/secret');
 
 function md5(string) {
     return crypto.createHash('md5').update(string).digest('hex');
@@ -47,7 +48,7 @@ userSchema.methods.generateJwt = function() {
         name: this.name,
         role: this.role,
         exp: parseInt(expiry.getTime() / 1000)
-    }, "MY_SECRET"); // DO NOT KEEP YOUR SECRET IN THE CODE!
+    }, secret);
 };
 
 mongoose.model('User', userSchema);
